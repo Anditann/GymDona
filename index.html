@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>💪 Gym Dashboard · Galaxy</title>
+  <!-- Font & ikon -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem 1.5rem;
+      /* GALAXY BACKGROUND - lebih berwarna dan dramatis */
+      background: #0a0a1a;
+      background-image: 
+        radial-gradient(ellipse at 20% 30%, #2d1b69 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 70%, #1b3b6b 0%, transparent 45%),
+        radial-gradient(ellipse at 50% 50%, #4a1a5e 0%, transparent 60%),
+        radial-gradient(ellipse at 10% 90%, #1a2a5e 0%, transparent 40%),
+        radial-gradient(ellipse at 90% 20%, #3a1a4e 0%, transparent 35%),
+        repeating-linear-gradient(45deg, rgba(255,255,255,0.01) 0px, rgba(255,255,255,0.01) 3px, transparent 3px, transparent 10px);
+      background-color: #0a0a1a;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* BINTANG GALAKSI - lebih banyak dan berwarna */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: 
+        radial-gradient(2px 2px at 10px 20px, #ffffff80, transparent),
+        radial-gradient(3px 3px at 60px 120px, #aaccff80, transparent),
+        radial-gradient(2px 2px at 120px 40px, #ffccaa80, transparent),
+        radial-gradient(4px 4px at 200px 300px, #ffffff60, transparent),
+        radial-gradient(2px 2px at 300px 80px, #ccaaff80, transparent),
+        radial-gradient(3px 3px at 450px 200px, #88ddff80, transparent),
+        radial-gradient(2px 2px at 550px 350px, #ffaacc80, transparent),
+        radial-gradient(2px 2px at 700px 150px, #ffffff90, transparent),
+        radial-gradient(3px 3px at 850px 400px, #aaccff80, transparent),
+        radial-gradient(2px 2px at 1000px 250px, #ffccaa80, transparent),
+        radial-gradient(4px 4px at 1150px 100px, #ccaaff70, transparent),
+        radial-gradient(2px 2px at 1300px 320px, #88ddff80, transparent),
+        radial-gradient(3px 3px at 200px 500px, #ffaacc80, transparent),
+        radial-gradient(2px 2px at 500px 600px, #ffffff70, transparent),
+        radial-gradient(2px 2px at 900px 550px, #aaccff80, transparent),
+        radial-gradient(2px 2px at 1200px 480px, #ffccaa80, transparent),
+        radial-gradient(3px 3px at 80px 650px, #ccaaff80, transparent),
+        radial-gradient(2px 2px at 400px 750px, #88ddff80, transparent),
+        radial-gradient(2px 2px at 800px 700px, #ffaacc80, transparent),
+        radial-gradient(3px 3px at 1100px 650px, #ffffff80, transparent);
+      background-size: 200px 200px;
+      opacity: 0.9;
+      pointer-events: none;
+      z-index: 0;
+      animation: twinkle 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+
+    /* NEBULA EFFECT - tambahan warna-warni */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 30% 40%, rgba(100, 40, 180, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 70% 60%, rgba(30, 60, 180, 0.06) 0%, transparent 35%),
+        radial-gradient(circle at 50% 80%, rgba(180, 40, 120, 0.05) 0%, transparent 30%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .dashboard {
+      max-width: 1440px;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ----- HEADER ----- */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+      gap: 1rem 0.5rem;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-left .logo-icon {
+      background: linear-gradient(145deg, rgba(60, 40, 120, 0.6), rgba(20, 20, 50, 0.8));
+      backdrop-filter: blur(8px);
+      color: white;
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      box-shadow: 0 8px 32px rgba(100, 60, 200, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .header-left h1 {
+      font-weight: 700;
+      font-size: 2rem;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #e8edff, #b0bef5, #c8a0f0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 30px rgba(150, 100, 255, 0.15);
+    }
+
+    .badge-rest {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0.6rem 1.6rem;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #c8d0f0;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .badge-rest i {
+      color: #ff7a5c;
+      margin-right: 10px;
+    }
+
+    /* ----- PROGRESS BAR ----- */
+    .progress-wrap {
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 60px;
+      padding: 0.4rem 1rem 0.4rem 1.6rem;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.2rem;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .progress-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      color: #bcc6e6;
+    }
+
+    .progress-label i {
+      color: #8a7adf;
+    }
+
+    .progress-track {
+      flex: 1;
+      min-width: 140px;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.4);
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #7a6aff, #a06cff, #ff7a5c, #ff5c8a);
+      border-radius: 40px;
+      transition: width 0.3s ease;
+      box-shadow: 0 0 20px rgba(120, 100, 255, 0.4);
+    }
+
+    .progress-text {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #c8d0f0;
+      min-width: 60px;
+      text-align: right;
+    }
+
+    /* ----- GRID HARI (tanpa Selasa & Jumat) ----- */
+    .grid-hari {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 2.2rem;
+    }
+
+    /* ----- CARD HARI ----- */
+    .day-card {
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 28px;
+      padding: 1.5rem 1rem 1.2rem;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .day-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .day-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      letter-spacing: -0.3px;
+      color: #e8edff;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 0.7rem;
+      margin-bottom: 1rem;
+    }
+
+    .day-label i {
+      font-size: 1.2rem;
+      color: #8a7adf;
+      width: 1.8rem;
+      text-align: center;
+    }
+
+    .exercise-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
+    .exercise-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 500;
+      font-size: 0.93rem;
+      padding: 0.25rem 0.2rem;
+      border-radius: 10px;
+      transition: background 0.1s;
+      color: #d0d8f0;
+      cursor: default;
+    }
+
+    .exercise-list li input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #8a7adf;
+      cursor: pointer;
+      flex-shrink: 0;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .exercise-list li input[type="checkbox"]:checked + span {
+      text-decoration: line-through;
+      opacity: 0.5;
+      color: #9aa8d0;
+    }
+
+    .exercise-list li i {
+      color: #6a7aaa;
+      font-size: 0.85rem;
+      width: 1.2rem;
+      text-align: center;
+      opacity: 0.6;
+    }
+
+    .exercise-list li span {
+      flex: 1;
+      transition: 0.1s;
+    }
+
+    /* ----- CARD KHUSUS UNTUK MINGGU (cardio) ----- */
+    .cardio-note {
+      margin-top: 0.6rem;
+      opacity: 0.5;
+      font-size: 0.8rem;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      color: #a0b0d0;
+      font-weight: 500;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      padding-top: 0.6rem;
+    }
+
+    /* ----- FOOTER ----- */
+    .footer-note {
+      margin-top: 1.8rem;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      width: fit-content;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .footer-note i {
+      color: #8a7adf;
+      font-size: 1.1rem;
+    }
+
+    .footer-note span {
+      color: #bcc6e6;
+    }
+
+    .footer-note .dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: #ff7a5c;
+      border-radius: 20px;
+      margin-right: 6px;
+    }
+
+    /* responsive */
+    @media (max-width: 1000px) {
+      .grid-hari {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 700px) {
+      body { padding: 1.2rem; }
+      .header-left h1 { font-size: 1.6rem; }
+      .grid-hari {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.9rem;
+      }
+      .day-card { padding: 1.2rem 0.8rem; }
+      .progress-wrap { padding: 0.4rem 1rem; }
+    }
+
+    @media (max-width: 480px) {
+      .grid-hari {
+        grid-template-columns: 1fr;
+        gap: 0.9rem;
+      }
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.7rem;
+      }
+      .footer-note {
+        width: 100%;
+        justify-content: center;
+        border-radius: 30px;
+        padding: 0.8rem 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="dashboard">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <div class="logo-icon"><i class="fas fa-dumbbell"></i></div>
+      <h1>Gym Dashboard</h1>
+    </div>
+    <div class="badge-rest">
+      <i class="fas fa-moon"></i> Selasa & Jumat · Rest
+    </div>
+  </div>
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <i class="fas fa-chart-simple"></i> Progress hari ini
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+    </div>
+    <div class="progress-text" id="progressText">0%</div>
+  </div>
+
+  <!-- GRID HARI: SENIN, RABU, KAMIS, SABTU, MINGGU (Selasa & Jumat dihilangkan) -->
+  <div class="grid-hari">
+
+    <!-- SENIN -->
+    <div class="day-card" data-day="senin">
+      <div class="day-label"><i class="fas fa-calendar-day"></i> Senin</div>
+      <ul class="exercise-list">
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Goblet Squat</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Romanian Deadlift</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Leg Press</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Leg Curl</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Leg Extension</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Hip Abduction</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Calf Raise</span></li>
+      </ul>
+    </div>
+
+    <!-- RABU -->
+    <div class="day-card" data-day="rabu">
+      <div class="day-label"><i class="fas fa-calendar-day"></i> Rabu</div>
+      <ul class="exercise-list">
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Lat Pulldown</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Seated Cable Row</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Shoulder Press</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Lateral Raise</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Face Pull</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Biceps Curl</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Triceps Pushdown</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Plank</span></li>
+      </ul>
+    </div>
+
+    <!-- KAMIS -->
+    <div class="day-card" data-day="kamis">
+      <div class="day-label"><i class="fas fa-calendar-day"></i> Kamis</div>
+      <ul class="exercise-list">
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Bulgarian Split Squat</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Hip Thrust</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Leg Press</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Romanian Deadlift</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Leg Curl</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Hip Abduction</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Calf Raise</span></li>
+      </ul>
+    </div>
+
+    <!-- SABTU -->
+    <div class="day-card" data-day="sabtu">
+      <div class="day-label"><i class="fas fa-calendar-day"></i> Sabtu</div>
+      <ul class="exercise-list">
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Chest Press</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Lat Pulldown</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Seated Cable Row</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Lateral Raise</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Biceps Curl</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Triceps Pushdown</span></li>
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-arrow-up"></i> <span>Plank</span></li>
+      </ul>
+    </div>
+
+    <!-- MINGGU -->
+    <div class="day-card" data-day="minggu">
+      <div class="day-label"><i class="fas fa-calendar-day"></i> Minggu</div>
+      <ul class="exercise-list">
+        <li><input type="checkbox" class="exercise-check" /> <i class="fas fa-heartbeat"></i> <span>Cardio (30-45 menit)</span></li>
+      </ul>
+      <div class="cardio-note">
+        <i class="fas fa-stopwatch"></i> <span>aktif · pemulihan</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer-note">
+    <i class="fas fa-check-circle" style="color: #8a7adf;"></i>
+    <span><span class="dot"></span> Selasa & Jumat <strong style="color:#e8edff;">istirahat</strong> · 5 hari latihan</span>
+    <span style="opacity:0.3; margin-left: 2px;">|</span>
+    <span><i class="far fa-clock" style="margin-right: 6px;"></i> checklist latihan</span>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const checkboxes = document.querySelectorAll('.exercise-list input[type="checkbox"]');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+
+    function updateProgress() {
+      const total = checkboxes.length;
+      if (total === 0) {
+        progressFill.style.width = '0%';
+        progressText.textContent = '0%';
+        return;
+      }
+      let checked = 0;
+      checkboxes.forEach(cb => { if (cb.checked) checked++; });
+      const percent = Math.round((checked / total) * 100);
+      progressFill.style.width = percent + '%';
+      progressText.textContent = percent + '%';
+    }
+
+    checkboxes.forEach(cb => {
+      cb.addEventListener('change', updateProgress);
+    });
+
+    function saveState() {
+      const states = [];
+      checkboxes.forEach(cb => {
+        states.push(cb.checked);
+      });
+      localStorage.setItem('gymCheckboxes', JSON.stringify(states));
+    }
+
+    function loadState() {
+      const saved = localStorage.getItem('gymCheckboxes');
+      if (!saved) return;
+      try {
+        const states = JSON.parse(saved);
+        if (states.length === checkboxes.length) {
+          checkboxes.forEach((cb, idx) => {
+            cb.checked = states[idx];
+          });
+          updateProgress();
+        }
+      } catch (e) {}
+    }
+
+    checkboxes.forEach(cb => {
+      cb.addEventListener('change', saveState);
+    });
+
+    loadState();
+  })();
+</script>
+</body>
+</html>
