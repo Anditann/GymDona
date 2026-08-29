@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>💪 Gym Dashboard · Galaxy</title>
+  <title>💪 Gym Dashboard · Galaxy + Confetti</title>
   <!-- Font & ikon -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- Canvas Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
   <style>
     * {
       margin: 0;
@@ -23,7 +25,7 @@
       justify-content: center;
       align-items: center;
       padding: 2rem 1.5rem;
-      /* GALAXY BACKGROUND - lebih berwarna dan dramatis */
+      /* GALAXY BACKGROUND */
       background: #0a0a1a;
       background-image: 
         radial-gradient(ellipse at 20% 30%, #2d1b69 0%, transparent 50%),
@@ -37,7 +39,7 @@
       overflow-x: hidden;
     }
 
-    /* BINTANG GALAKSI - lebih banyak dan berwarna */
+    /* BINTANG GALAKSI */
     body::before {
       content: '';
       position: fixed;
@@ -75,7 +77,6 @@
       100% { opacity: 1; }
     }
 
-    /* NEBULA EFFECT - tambahan warna-warni */
     body::after {
       content: '';
       position: fixed;
@@ -155,7 +156,7 @@
       margin-right: 10px;
     }
 
-    /* ----- PROGRESS BAR ----- */
+    /* ----- PROGRESS BAR + ACTION BUTTONS ----- */
     .progress-wrap {
       background: rgba(255, 255, 255, 0.04);
       backdrop-filter: blur(12px);
@@ -210,7 +211,46 @@
       text-align: right;
     }
 
-    /* ----- GRID HARI (tanpa Selasa & Jumat) ----- */
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-reset {
+      background: rgba(255, 122, 92, 0.15);
+      border: 1px solid rgba(255, 122, 92, 0.25);
+      color: #ff7a5c;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-reset:hover {
+      background: rgba(255, 122, 92, 0.25);
+      border-color: rgba(255, 122, 92, 0.4);
+      transform: scale(1.03);
+      box-shadow: 0 0 20px rgba(255, 122, 92, 0.15);
+    }
+
+    .btn-reset:active {
+      transform: scale(0.95);
+    }
+
+    .btn-reset i {
+      font-size: 0.9rem;
+    }
+
+    /* ----- GRID HARI (5 kolom) ----- */
     .grid-hari {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -310,7 +350,7 @@
       transition: 0.1s;
     }
 
-    /* ----- CARD KHUSUS UNTUK MINGGU (cardio) ----- */
+    /* Cardio note khusus Minggu */
     .cardio-note {
       margin-top: 0.6rem;
       opacity: 0.5;
@@ -360,6 +400,31 @@
       margin-right: 6px;
     }
 
+    /* ----- CELEBRATION OVERLAY (opsional) ----- */
+    .celebration-badge {
+      display: none;
+      background: linear-gradient(135deg, #ffd700, #ff6b6b, #a06cff);
+      padding: 0.4rem 1.2rem;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: #fff;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      animation: pulse-glow 1.5s ease-in-out infinite;
+      margin-left: 0.5rem;
+    }
+
+    .celebration-badge.show {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+      50% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.6), 0 0 60px rgba(160, 108, 255, 0.3); }
+    }
+
     /* responsive */
     @media (max-width: 1000px) {
       .grid-hari {
@@ -377,6 +442,7 @@
       }
       .day-card { padding: 1.2rem 0.8rem; }
       .progress-wrap { padding: 0.4rem 1rem; }
+      .action-buttons { width: 100%; justify-content: flex-end; }
     }
 
     @media (max-width: 480px) {
@@ -395,6 +461,16 @@
         border-radius: 30px;
         padding: 0.8rem 1.2rem;
       }
+      .progress-wrap {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.8rem;
+        padding: 1rem;
+        border-radius: 28px;
+      }
+      .action-buttons {
+        justify-content: center;
+      }
     }
   </style>
 </head>
@@ -412,18 +488,26 @@
     </div>
   </div>
 
-  <!-- PROGRESS BAR -->
+  <!-- PROGRESS BAR + ACTION BUTTONS -->
   <div class="progress-wrap">
     <div class="progress-label">
-      <i class="fas fa-chart-simple"></i> Progres minggu ini Seng
+      <i class="fas fa-chart-simple"></i> Progress
     </div>
     <div class="progress-track">
       <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
     </div>
     <div class="progress-text" id="progressText">0%</div>
+    <div class="action-buttons">
+      <button class="btn-reset" id="resetAllBtn" title="Reset semua checklist">
+        <i class="fas fa-undo-alt"></i> Reset All
+      </button>
+      <span class="celebration-badge" id="celebrationBadge">
+        <i class="fas fa-star"></i> ALL DONE! 🎉
+      </span>
+    </div>
   </div>
 
-  <!-- GRID HARI: SENIN, RABU, KAMIS, SABTU, MINGGU (Selasa & Jumat dihilangkan) -->
+  <!-- GRID HARI: SENIN, RABU, KAMIS, SABTU, MINGGU -->
   <div class="grid-hari">
 
     <!-- SENIN -->
@@ -506,15 +590,20 @@
 
 <script>
   (function() {
+    // --- ELEMEN ---
     const checkboxes = document.querySelectorAll('.exercise-list input[type="checkbox"]');
     const progressFill = document.getElementById('progressFill');
     const progressText = document.getElementById('progressText');
+    const resetBtn = document.getElementById('resetAllBtn');
+    const celebrationBadge = document.getElementById('celebrationBadge');
 
+    // --- FUNGSI UPDATE PROGRESS + CELEBRATION ---
     function updateProgress() {
       const total = checkboxes.length;
       if (total === 0) {
         progressFill.style.width = '0%';
         progressText.textContent = '0%';
+        celebrationBadge.classList.remove('show');
         return;
       }
       let checked = 0;
@@ -522,12 +611,88 @@
       const percent = Math.round((checked / total) * 100);
       progressFill.style.width = percent + '%';
       progressText.textContent = percent + '%';
+
+      // CELEBRATION: jika semua checklist dicentang (100%)
+      if (percent === 100 && total > 0) {
+        celebrationBadge.classList.add('show');
+        // trigger confetti (hanya jika sebelumnya belum 100%)
+        if (!window._confettiFired) {
+          window._confettiFired = true;
+          fireConfetti();
+        }
+      } else {
+        celebrationBadge.classList.remove('show');
+        window._confettiFired = false; // reset flag supaya bisa fire lagi nanti
+      }
     }
 
-    checkboxes.forEach(cb => {
-      cb.addEventListener('change', updateProgress);
-    });
+    // --- FUNGSI CONFETTI (menggunakan library canvas-confetti) ---
+    function fireConfetti() {
+      // Konfetti meriah dari berbagai arah
+      const duration = 3 * 1000; // 3 detik
+      const end = Date.now() + duration;
 
+      (function frame() {
+        // Konfetti dari kiri
+        confetti({
+          particleCount: 7,
+          startVelocity: 30,
+          spread: 55,
+          origin: { x: 0, y: 0.6 },
+          colors: ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#a06cff', '#ff7a5c']
+        });
+        // Konfetti dari kanan
+        confetti({
+          particleCount: 7,
+          startVelocity: 30,
+          spread: 55,
+          origin: { x: 1, y: 0.6 },
+          colors: ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#a06cff', '#ff7a5c']
+        });
+        // Konfetti dari tengah atas
+        confetti({
+          particleCount: 10,
+          startVelocity: 20,
+          spread: 70,
+          origin: { x: 0.5, y: 0.2 },
+          colors: ['#ffd93d', '#ff6b6b', '#4d96ff', '#a06cff']
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      })();
+
+      // Tambahan efek burst besar di tengah
+      setTimeout(() => {
+        confetti({
+          particleCount: 80,
+          spread: 120,
+          origin: { x: 0.5, y: 0.5 },
+          colors: ['#ffd93d', '#ff6b6b', '#6bcb77', '#4d96ff', '#a06cff', '#ff7a5c', '#ff9ff3']
+        });
+      }, 300);
+    }
+
+    // --- RESET ALL ---
+    function resetAllCheckboxes() {
+      // Konfirmasi sebelum reset
+      if (checkboxes.length === 0) return;
+      const confirmed = confirm('Yakin ingin mereset semua checklist latihan?');
+      if (!confirmed) return;
+
+      checkboxes.forEach(cb => {
+        cb.checked = false;
+      });
+      // Hapus flag confetti
+      window._confettiFired = false;
+      celebrationBadge.classList.remove('show');
+      updateProgress();
+      // Simpan state ke localStorage
+      saveState();
+    }
+
+    // --- SAVE & LOAD STATE (localStorage) ---
     function saveState() {
       const states = [];
       checkboxes.forEach(cb => {
@@ -550,11 +715,22 @@
       } catch (e) {}
     }
 
+    // --- EVENT LISTENERS ---
     checkboxes.forEach(cb => {
-      cb.addEventListener('change', saveState);
+      cb.addEventListener('change', () => {
+        updateProgress();
+        saveState();
+      });
     });
 
+    resetBtn.addEventListener('click', resetAllCheckboxes);
+
+    // --- INIT ---
     loadState();
+    // Pastikan celebration badge tidak muncul di awal (kecuali memang 100%)
+    if (parseInt(progressText.textContent) !== 100) {
+      celebrationBadge.classList.remove('show');
+    }
   })();
 </script>
 </body>
